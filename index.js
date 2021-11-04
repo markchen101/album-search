@@ -10,14 +10,13 @@ const getData = (() => {
   const searchItem = document.querySelector(".header__input");
   const searchButton = document.querySelector(".header__button");
   const searchImg = document.querySelector(".header__img");
-  let card = {
-    text: "",
-  };
+  let inputValue = "";
 
   searchItem.addEventListener("keyup", (e) => {
-    card.text = e.target.value;
+    input = e.target.value;
+    inputValue = input.trim();
     if (e.key === "Enter") {
-      if (card.text == "") {
+      if (inputValue === "") {
         alert("You Must Search Something First!");
       } else {
         getApi();
@@ -26,8 +25,9 @@ const getData = (() => {
   });
   searchButton.addEventListener("click", (e) => {
     e.stopPropagation();
-    card.text = e.target.previousElementSibling.value;
-    if (card.text == "") {
+    input = e.target.previousElementSibling.value;
+    inputValue = input.trim();
+    if (inputValue === "") {
       alert("You Must Search Something First!");
     } else {
       getApi();
@@ -35,8 +35,9 @@ const getData = (() => {
   });
   searchImg.addEventListener("click", (e) => {
     e.stopPropagation();
-    card.text = e.target.parentElement.previousElementSibling.value;
-    if (card.text == undefined) {
+    input = e.target.parentElement.previousElementSibling.value;
+    inputValue = input.trim();
+    if (inputValue === "") {
       alert("You Must Search Something First!");
     } else {
       getApi();
@@ -47,24 +48,24 @@ const getData = (() => {
     const desc = document.querySelector(".main__desc");
     const cardList = document.querySelector(".main__cardList");
 
+    apiData = data;
+
     let arr = data.map((item) => {
       return `<div class="main__card">
             <img class="main__card--img" src="${item.artworkUrl100}">
             <div class="main__card--desc">${item.collectionCensoredName}</div>
         </div>`;
     });
-    if (arr.length >= 50) {
-      arr = arr.splice(0, 50);
-    }
+    // if (arr.length >= 50) {
+    //   arr = arr.splice(0, 50);
+    // }
     desc.innerHTML = `${arr.length} results for "${search}"`;
     cardList.innerHTML = arr.join("");
-
-    data.length >= 50 ? (apiData = data.splice(0, 50)) : (apiData = data);
   };
 
   function getApi() {
-    fetchApiData(card.text).then((data) => {
-      showCard(data.results, card.text);
+    fetchApiData(inputValue).then((data) => {
+      showCard(data.results, inputValue);
     });
     document.querySelector(".header__input").value = "";
   }
